@@ -1,0 +1,72 @@
+*acacia* *acacia.vim* *acacia.txt*
+
+License: MIT
+URL: https://github.com/lunarwatcher/Acacia
+
+Changelog: N/A
+
+================================================================================
+Table of contents~
+
+    1. Introduction ................ |acacia-introduction|
+
+================================================================================
+1. Introduction                                              *acacia-introduction*
+
+Vim treesitter polyfill, because Neovim can't have all the nice things.
+
+As a consequence, this plugin is entirely incompatible with neovim. You already
+have a treesitter plugin - you're not getting two.
+
+What?~
+
+For those of you out of the loop, treesitter is basically a fancy parser that
+parses languages. It's flexible (meaning it can support anything, as the parsers
+appear to be external), it's fast, and most importantly, it has syntax
+highlighting.
+
+This polyfill aims to bring treesitter syntax highlighting into Vim, because we
+should be allowed to have nice things too.
+
+Why?~
+
+Because I don't like Neovim's practices and incompatibility with Vim, in spite
+of claiming it's a drop-in replacement (spoiler: it isn't anymore). It's
+substantially easier to write a plugin than to migrate to nvim (and I've tried,
+three times on two operating systems. It's gotten worse).
+
+In spite of that, they still do make certain changes I essentially get jealous
+of. Treesitter highlighting, or at least the potential behind it, is one of
+them.
+
+Also means I have another execuse to use vim9 :eyes:
+
+How?~
+
+Neovim has query methods and other bits built into the C of neovim. That's why
+nvim-0.5.0 is required for neovim's implementation of treesitter.
+
+Vimscript and C have one thing in common though: they're both turing-complete.
+Vim might not have support for treesitter built-in, but that doesn't mean it
+can't have it implemented in Vimscript and C++.
+
+Requirements~
+ * A very recent version of Vim - this plugin relies on Vim9 for performance
+   reasons, and is not written to be backwards-compatible.
+ * The ability to compile C (for treesitter parsers)
+ * The ability to compile C++ (for Acacia - might not be needed at all, the
+                               toolchain may change as development progresses)
+ * Linux, Mac, or patience and a knowledge of C compilers (|acacia-windows|)
+
+================================================================================
+2. Troubleshooting and known bugs            *acacia-bugs*  *acacia-troubleshooting*
+
+                                                                  *acacia-windows*
+Windows~
+I don't use Windows. As a result, I cannot guarantee that this plugin will work
+on Windows, much less what has to be done to get it working. Unless someone who
+uses Windows wants to help, Windows should be considered to not be supported.
+
+WSL or installing Linux are the two options to fix this in the meanwhile.
+
+vim:ft=help:tw=80
