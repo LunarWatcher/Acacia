@@ -39,7 +39,8 @@ In spite of that, they still do make certain changes I essentially get jealous
 of. Treesitter highlighting, or at least the potential behind it, is one of
 them.
 
-Also means I have another execuse to use vim9 :eyes:
+Also means I have another execuse to use vim9 :eyes: It's exciting to use a JIT
+language meant for an editor, and for said language to not be JavaScript.
 
 How?~
 
@@ -52,7 +53,9 @@ can't have it implemented in Vimscript and C++.
 
 Requirements~
  * A very recent version of Vim - this plugin relies on Vim9 for performance
-   reasons, and is not written to be backwards-compatible.
+   reasons, and is not written to be backwards-compatible with earlier versions
+    of Vim. I currently guarantee compatibility with 8.2.2717 up (this may
+    change in the future).
  * The ability to compile C (for treesitter parsers)
  * The ability to compile C++ (for Acacia - might not be needed at all, the
                                toolchain may change as development progresses)
@@ -65,8 +68,11 @@ Requirements~
 Windows~
 I don't use Windows. As a result, I cannot guarantee that this plugin will work
 on Windows, much less what has to be done to get it working. Unless someone who
-uses Windows wants to help, Windows should be considered to not be supported.
+uses Windows wants to help, Windows should be considered to not be supported. It
+_may_ still work, but to find out, you're on your own. If you do figure it out,
+any documentation you may have as a consequence is more than welcome.
 
 WSL or installing Linux are the two options to fix this in the meanwhile.
+
 
 vim:ft=help:tw=80
