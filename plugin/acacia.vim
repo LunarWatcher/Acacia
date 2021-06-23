@@ -4,6 +4,8 @@ vim9script
 g:TreesitterDirectory = resolve(expand('<sfile>:p:h:h'))
 g:TreesitterUpdateMode = 0
 
+
+# TS management {{{
 def acacia#UpdateTreesitter()
     if isdirectory(g:TreesitterDirectory .. '/tree-sitter')
         # TODO: enable the option to update to the newest tag?
@@ -19,9 +21,10 @@ def acacia#UpdateTreesitter()
     endif
 enddef
 
-def acacia#TSInstall(language: string)
-
-enddef
-
+# }}}
+# Command interface {{{
 command! -nargs=0 TSUpdate call acacia#UpdateTreesitter()
-command! -nargs=1 TSInstall call acacia#TSInstall(<f-args>)
+# TODO: Hook up autocomplete
+command! -nargs=1 TSInstall call acacia#Parsers#TSInstall(<f-args>)
+command! -nargs=0 TSList call acacia#Parsers#TSList()
+# }}}

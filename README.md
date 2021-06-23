@@ -2,5 +2,5 @@
 
 Treesitter polyfill for Vim.
 
-Note that this is a somewhat ambitious project for me alone, much less when I basically have no idea what I'm doing yet. I have no idea when this might be usable as a result. As a secondary implication of this, I'll be keeping the code private until I've established a connection with treesitter, and can receive data. If you're reading this, that means (woo!) that has happened, and the bare prototype with no side-effects in Vim works.
+Note that I'm currently the only person working on this, with a fairly low chance of ending up with other maintainers (due to a lack of interest in meta development, mostly). There's no guarantees wrt. stability or functionality at this time, nor is there a concrete roadmap for when stuff is scheduled to be done. If you're interested in seeing tree-sitter support in Vim, please consider contributing to something on the [TODO list](https://github.com/LunarWatcher/Acacia/issues/1)
 
