@@ -1,1 +1,7 @@
 doc/tags
+
+# Ignore treesitter itself
+treesitter/
+# Ignore the parsers
+parsers/
+tree-sitter

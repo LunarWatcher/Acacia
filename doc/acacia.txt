@@ -3,7 +3,7 @@
 License: MIT
 URL: https://github.com/lunarwatcher/Acacia
 
-Changelog: N/A
+Changelog: https://github.com/LunarWatcher/Acacia/blob/master/CHANGELOG.md
 
 ================================================================================
 Table of contents~
@@ -11,11 +11,13 @@ Table of contents~
     1. Introduction ............................... |acacia-introduction|
     2. Troubleshooting and bugs ................... |acacia-troubleshooting|
         2.1. Windows .............................. |acacia-windows|
+    3. Configuring ................................ |acacia-config|
 
 ================================================================================
 1. Introduction                                              *acacia-introduction*
 
-Vim treesitter polyfill, because Neovim can't have all the nice things.
+Vim tree-sitter polyfill, because Neovim can't have all the nice things to
+itself.
 
 As a consequence, this plugin is entirely incompatible with neovim. You already
 have a treesitter plugin - you're not getting two.
@@ -76,5 +78,22 @@ any documentation you may have as a consequence is more than welcome.
 
 WSL or installing Linux are the two options to fix this in the meanwhile.
 
+List of potential problems~
+If you've decided to try making Acacia work on Windows, here's a potentially
+incomplete list of stuff that needs to be done:
+
+* Compiling
+* Accessing Git (Git being in the PATH is currently a requirement)
+
+================================================================================
+3. Configuring                                                     *acacia-config*
+
+
+*g:TreesitterUpdateMode*  How to update Tree-sitter.
+                        Type: int
+                        Default: 0
+                        Allowed values:
+                        * 0: Use the latest commit on the master branch
+                        * 1: Use the latest tag
 
 vim:ft=help:tw=80
