@@ -8,7 +8,9 @@ Changelog: N/A
 ================================================================================
 Table of contents~
 
-    1. Introduction ................ |acacia-introduction|
+    1. Introduction ............................... |acacia-introduction|
+    2. Troubleshooting and bugs ................... |acacia-troubleshooting|
+        2.1. Windows .............................. |acacia-windows|
 
 ================================================================================
 1. Introduction                                              *acacia-introduction*
