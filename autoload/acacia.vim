@@ -47,7 +47,6 @@ def acacia#TSList()
     echo "The supported languages are:" keys(g:TreesitterParsers)->join(', ')
 enddef
 
-
 # TS management {{{
 def acacia#UpdateTreesitter()
     if isdirectory(g:TreesitterDirectory .. '/tree-sitter')
