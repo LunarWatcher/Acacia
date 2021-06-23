@@ -1,7 +1,9 @@
 doc/tags
 
+# Conflict avoidance {{{
 # Ignore treesitter itself
-treesitter/
+tree-sitter/
+
 # Ignore the parsers
 parsers/
-tree-sitter
+# }}}

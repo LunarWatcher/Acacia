@@ -23,4 +23,5 @@ def acacia#TSInstall(language: string)
 
 enddef
 
-
+command! -nargs=0 TSUpdate call acacia#UpdateTreesitter()
+command! -nargs=1 TSInstall call acacia#TSInstall(<f-args>)
