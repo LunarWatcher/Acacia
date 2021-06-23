@@ -20,11 +20,23 @@ def acacia#UpdateTreesitter()
         exec '!git clone https://github.com/tree-sitter/tree-sitter' g:TreesitterDirectory .. '/tree-sitter'
     endif
 enddef
-
+# }}}
+# Runner {{{
+def acacia#InitializeBuffer()
+    if has_key(g:TreesitterParsers, &ft)
+        # Do some fancy initialization or whatever
+    endif
+enddef
 # }}}
 # Command interface {{{
 command! -nargs=0 TSUpdate call acacia#UpdateTreesitter()
 # TODO: Hook up autocomplete
-command! -nargs=1 TSInstall call acacia#Parsers#TSInstall(<f-args>)
-command! -nargs=0 TSList call acacia#Parsers#TSList()
+command! -nargs=1 TSInstall call acacia#TSManage(<f-args>, 1)
+command! -nargs=0 TSList call acacia#TSList()
+# }}}
+# Runner {{{
+augroup AcaciaGroup1
+    au!
+    autocmd FileType * call acacia#InitializeBuffer()
+augroup END
 # }}}
