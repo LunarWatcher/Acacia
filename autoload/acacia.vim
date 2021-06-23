@@ -27,8 +27,8 @@ def acacia#TSManage(language: string, install: number = 1)
             echo "Parser already installed"
             return
         endif
+
         exec '!git clone' g:TreesitterParsers[language].url targetDirectory
-        
     else
         if (!directoryExists)
             echo "Parser not installed"
