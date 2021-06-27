@@ -107,11 +107,14 @@ Note that this list may change at any time during development
 
  * A very recent version of Vim - this plugin relies on Vim9 for performance
    reasons, and is not written to be backwards-compatible with earlier versions
-    of Vim. I currently guarantee compatibility with 8.2.2717 up (this may
+    of Vim. I currently guarantee compatibility with 8.2.2717 and up (this may
     change in the future).
  * The ability to compile C (for tree-sitter as well as its parsers)
- * The ability to compile C++
- * The ability to compile Rust
+ * The ability to compile C++17
+ * The ability to compile Rust              TODO: Figure out if this is
+                                            necessary (it seems to be required
+                                            for certain grammars, but it's not
+                                            clear)
  * Git installed (for tree-sitter and parser updates)
  * Linux, Mac, or patience and a knowledge of C and C++ compilers
   (see: |acacia-windows|)
