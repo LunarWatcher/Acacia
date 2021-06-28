@@ -128,7 +128,7 @@ I don't use Windows. As a result, I cannot guarantee that this plugin will work
 on Windows, much less what has to be done to get it working. Unless someone who
 uses Windows wants to help, Windows should be considered to not be supported. It
 _may_ still work, but to find out, you're on your own. If you do figure it out,
-any documentation you may have as a consequence is more than welcome.
+contributions making it work for others are welcome.
 
 WSL or installing Linux are the two options to fix this in the meanwhile.
 
@@ -136,7 +136,8 @@ List of potential problems~
 If you've decided to try making Acacia work on Windows, here's a potentially
 incomplete list of stuff that needs to be done:
 
-* Compiling
+* Compiling (between MSVC, VS terminals, and other Very Fun Stuff:tm:, it's a
+             pain in the ass to just build. Expecting it to work is unreasonable)
 * Accessing Git (Git being in the PATH is currently a requirement)
 
 ================================================================================

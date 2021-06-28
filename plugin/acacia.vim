@@ -6,7 +6,6 @@ endif
 g:_acacia_loaded = 1
 
 # Command interface {{{
-command! -nargs=0 TSUpdate call acacia#UpdateTreesitter()
 
 # TODO: Hook up autocomplete To these two
 command! -nargs=1 TSInstall call acacia#TSManage(<f-args>, 1)

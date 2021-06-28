@@ -10,9 +10,6 @@ g:TreesitterParsers = {
 # Semi-undocumented directory variable
 g:TreesitterDirectory = resolve(expand('<sfile>:p:h:h'))
 
-g:TreesitterUpdateMode = 0
-
-
 def acacia#TSManage(language: string, install: number = 1)
     if !has_key(g:TreesitterParsers, language)
         echo "Failed to find" language "on the list of supported languages."
@@ -47,22 +44,6 @@ def acacia#TSList()
     echo "The supported languages are:" keys(g:TreesitterParsers)->join(', ')
 enddef
 
-# TS management {{{
-def acacia#UpdateTreesitter()
-    if isdirectory(g:TreesitterDirectory .. '/tree-sitter')
-        # TODO: enable the option to update to the newest tag?
-        var resolvedUpdateMode = "echo 'Invalid update mode'"
-        if (g:TreesitterUpdateMode == 0)
-            resolvedUpdateMode = "git pull origin master && git checkout master"
-        elseif  g:TreesitterUpdateMode == 1
-            resolvedUpdateMode = "git checkout $(git describe --tags)"
-        endif
-        exec '!cd' g:TreesitterDirectory .. '/tree-sitter' '&&' resolvedUpdateMode
-    else
-        exec '!git clone https://github.com/tree-sitter/tree-sitter' g:TreesitterDirectory .. '/tree-sitter'
-    endif
-enddef
-# }}}
 # Runner {{{
 def acacia#InitializeBuffer()
     if has_key(g:TreesitterParsers, &ft)
