@@ -44,6 +44,12 @@ def acacia#TSList()
     echo "The supported languages are:" keys(g:TreesitterParsers)->join(', ')
 enddef
 
+# Building the server {{{
+def acacia#BuildServer()
+    # if mkdir -p is bad on Windows, this is a Windows blocker
+    echo system('cd ' .. g:TreesitterDirectory .. '/src && mkdir -p build && cd build && cmake .. && cmake --build . -j 4')
+enddef
+# }}}
 # Runner {{{
 def acacia#InitializeBuffer()
     if has_key(g:TreesitterParsers, &ft)

@@ -31,9 +31,10 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 # }}}
 
+# Might be useful to make everything else header-only. We'll see.
 add_executable(treesitter Server.cpp)
 
 target_include_directories(treesitter PUBLIC ./)
 target_include_directories(treesitter PUBLIC ${CONAN_INCLUDE_DIRS})
 
-target_link_libraries(genesis ${CONAN_LIBS})
+target_link_libraries(treesitter ${CONAN_LIBS})

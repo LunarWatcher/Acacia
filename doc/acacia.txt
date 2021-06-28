@@ -110,7 +110,9 @@ Note that this list may change at any time during development
     of Vim. I currently guarantee compatibility with 8.2.2717 and up (this may
     change in the future).
  * The ability to compile C (for tree-sitter as well as its parsers)
+ * Python 3 with Conan installed
  * The ability to compile C++17
+ * CMake 3.10 or higher
  * The ability to compile Rust              TODO: Figure out if this is
                                             necessary (it seems to be required
                                             for certain grammars, but it's not

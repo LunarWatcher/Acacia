@@ -13,6 +13,7 @@ See the help document for more detailed requirements
 * Modern Vim (needs Vim 9 support - 8.2.2717 should generally be supported, though earlier may be fine)
 * C++17 compiler
     * ... and Python 3 with Conan
+* CMake 3.10 or higher
 * C compiler
 * Rust compiler (it's unclear whether this is necessary or not at the time of writing)
 * Linux or Mac; see the bugs section in the help document for a list of problems potentially preventing Windows compatibility at this time (contributions wanted when the project progresses that far)
