@@ -20,9 +20,7 @@ endif()
 include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 conan_cmake_configure (REQUIRES
-    ixwebsocket/11.2.4 # Necessary for channels (specifically to run the server
-                       # that receives messages from Vim, and sends messages back)
-    tree-sitter/0.17.3 # Necessary for reasons that should be obvious :p
+    tree-sitter/0.20.0 # Necessary for reasons that should be obvious :p
     spdlog/1.9.2
     nlohmann_json/3.10.5
     GENERATORS cmake
