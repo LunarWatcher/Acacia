@@ -141,6 +141,7 @@ incomplete list of stuff that needs to be done:
 * Compiling (between MSVC, VS terminals, and other Very Fun Stuff:tm:, it's a
              pain in the ass to just build. Expecting it to work is unreasonable)
 * Accessing Git (Git being in the PATH is currently a requirement)
+* The command used to build the server
 
 ================================================================================
 3. Configuring                                                     *acacia-config*
