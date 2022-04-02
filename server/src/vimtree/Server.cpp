@@ -10,9 +10,8 @@
 int main(int argc, char* argv[]) {
 
     std::string l;
-    std::cout << "[0, \"started\"]" << std::endl;
-        //std::cout << "[\"ex\", \"echoerr 'hi'\"]" << std::endl;
     while (true) {
+        // TODO: async processing, necessary later
         std::getline(std::cin, l);
 
         nlohmann::json j = nlohmann::json::parse(l);
@@ -24,13 +23,17 @@ int main(int argc, char* argv[]) {
 
         if (value.is_string() && value == "ping") {
             r = "pong";
+        } else {
+            // we assume good requests; we now have an object.
+            auto file = value.at("buff");
+            r = file;
         }
 
         std::ofstream o("acacia.log", std::ios_base::app);
         o << l << std::endl;
         std::cout << "[" 
             << 0 << ","
-            << value.dump()
+            << r.dump()
             << "]" << std::endl;
 
     }

@@ -9,25 +9,25 @@ g:TreesitterParsers = {
 
 # Semi-undocumented directory variable
 g:TreesitterDirectory = resolve(expand('<sfile>:p:h:h'))
-
-if (!exists('g:TreesitterPort'))
-    g:TreesitterPort = 62169
-endif
+g:TreesitterOnline = 0
 
 var job: job
 var channel: channel
 
 export def TSIOInput(ch: channel, msg: any)
     echom msg
+    if (msg == "pong")
+        g:TreesitterOnline = 1
+    endif
 enddef
 
 export def TSInit()
-    echom g:TreesitterDirectory .. "/src/build/bin/treesitter -p " .. g:TreesitterPort
-    job = job_start(g:TreesitterDirectory .. "/src/build/bin/treesitter -p " .. g:TreesitterPort,
+    job = job_start(g:TreesitterDirectory .. "/server/build/bin/treesitter",
         {
             "callback": TSIOInput,
             "mode": "json",
-            #"out_io": "pipe"
+            "noblock": 1,
+            "timeout": 0
         }
     )
     if job->job_status() == "fail"
@@ -35,10 +35,9 @@ export def TSInit()
     endif
 
     channel = job->job_getchannel()
+    channel->ch_evalexpr("ping")
 
 enddef
-
-
 
 export def TSManage(language: string, install: number = 1)
     if !has_key(g:TreesitterParsers, language)
@@ -81,9 +80,20 @@ export def BuildServer()
 enddef
 # }}}
 # Runner {{{
+
+export def TSReload()
+    if g:TreesitterOnline == 0
+        return
+    endif
+
+    channel->ch_evalexpr({"buff": join(getline(1, "$"), "\n")})
+enddef
+
 export def InitializeBuffer()
     if has_key(g:TreesitterParsers, &ft)
-        # Do some fancy initialization or whatever
+        autocmd <buffer> CursorHoldI * call acacia#TSReload()
     endif
 enddef
+
+
 # }}}
