@@ -1,5 +1,6 @@
 set (SOURCE_FILES
     vimtree/Server.cpp
+    vimtree/StdinServer.cpp
 )
 
 add_executable(treesitter ${SOURCE_FILES})

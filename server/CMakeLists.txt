@@ -24,7 +24,7 @@ conan_cmake_configure (REQUIRES
     spdlog/1.9.2
     nlohmann_json/3.10.5
     GENERATORS cmake
-    OPTIONS ixwebsocket:tls=False)
+)
 conan_cmake_autodetect (settings)
 conan_cmake_install (PATH_OR_REFERENCE . BUILD missing SETTINGS ${settings})
 

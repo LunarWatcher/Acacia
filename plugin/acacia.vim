@@ -14,6 +14,7 @@ command! -nargs=1 TSInstall call acacia.TSManage(<f-args>, 1)
 command! -nargs=1 TSUninstall call acacia.TSManage(<f-args>, 0)
 
 command! -nargs=0 TSList call acacia.TSList()
+command! -nargs=0 TSRestart call acacia.TSRestart()
 # }}}
 # Runner {{{
 augroup AcaciaGroup1

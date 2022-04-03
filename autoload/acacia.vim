@@ -81,7 +81,7 @@ enddef
 # }}}
 # Runner {{{
 
-export def TSReload()
+export def TSRefresh()
     if g:TreesitterOnline == 0
         return
     endif
@@ -91,9 +91,14 @@ enddef
 
 export def InitializeBuffer()
     if has_key(g:TreesitterParsers, &ft)
-        autocmd <buffer> CursorHoldI * call acacia#TSReload()
+        autocmd <buffer> CursorHoldI * call acacia#TSRefresh()
     endif
 enddef
 
+export def TSRestart()
+    job->job_stop()
+
+    TSInit()
+enddef
 
 # }}}
