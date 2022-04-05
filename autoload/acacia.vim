@@ -11,6 +11,17 @@ g:TreesitterParsers = {
 g:TreesitterDirectory = resolve(expand('<sfile>:p:h:h'))
 g:TreesitterOnline = 0
 
+if !exists('g:TreesitterCompiler')
+    g:TreesitterCompiler = $CC
+    if g:TreesitterCompiler == ""
+        if has("win32")
+            g:TreesitterCompiler = "cl"
+        else
+            g:TreesitterCompiler = "gcc"
+        endif
+    endif
+endif
+
 var job: job
 var channel: channel
 
@@ -50,11 +61,79 @@ export def TSManage(language: string, install: number = 1)
 
     if install
         if (directoryExists)
-            echo "Parser already installed"
+            echo "Updating parser..."
+            # These are executed in a subprocess,
+            # so we don't need to worry about pwd management
+            exec '!cd' targetDirectory "&& git pull"
+        else
+            exec '!git clone' g:TreesitterParsers[language].url targetDirectory
+        endif
+        
+        # Now we compile
+
+        var compiler = g:TreesitterCompiler
+
+        var baseArgs: list<string> = [] #"src/parser.c src/scanner.cc"
+        var cArgs: list<string>    = []
+        var cppArgs: list<string>  = []
+        if has("win32")
+            echoerr "Not supported; open a PR or wait for me to maybe or maybe not do it"
             return
+        else
+            baseArgs->add("-Isrc/")
+            baseArgs->add("-fPIC")
+
+            cppArgs = baseArgs->copy()
+
+            cArgs = baseArgs->copy()
+            cppArgs->add("-std=c++14")
+            cppArgs->add("-llibc++")
+
+            cArgs->add("-std=c99")
         endif
 
-        exec '!git clone' g:TreesitterParsers[language].url targetDirectory
+        var cAppend = cArgs->join(" ")
+        var cppAppend = cppArgs->join(" ")
+
+        var cFiles = globpath(targetDirectory .. "/src", '*.c')->split('\n')
+        var cppFiles = globpath(targetDirectory .. "/src", '*.cc')->split('\n')
+
+        echo cFiles
+        echo cppFiles
+
+        # These appear to be standard
+
+        var compArg = ""
+
+        for cF in cFiles
+            var base = cF[0 : cF->stridx(".") - 1]
+            echo base
+
+            compArg ..= " && "
+                .. compiler
+                .. " " .. cF
+                .. " -o " .. base .. ".o -c "
+                .. cAppend
+        endfor
+
+        for cF in cppFiles
+            var base = cF[0 : cF->stridx(".") - 1]
+            echo base
+
+            compArg ..= " && "
+                .. compiler
+                .. " " .. cF
+                .. " -o " .. base .. ".o -c "
+                .. cppAppend
+        endfor
+
+        echo compArg
+
+
+        exec "!cd" targetDirectory compArg
+
+        var objects = globpath(targetDirectory .. "/src", '*.o')->split('\n')
+        exec "!cd" targetDirectory "&&" compiler objects->join(' ') "-shared -o parser.so"
     else
         if (!directoryExists)
             echo "Parser not installed"
@@ -91,13 +170,17 @@ enddef
 
 export def InitializeBuffer()
     if has_key(g:TreesitterParsers, &ft)
-        autocmd <buffer> CursorHoldI * call acacia#TSRefresh()
+        autocmd CursorHoldI <buffer> call acacia#TSRefresh()
     endif
 enddef
 
-export def TSRestart()
+export def TSStop()
     job->job_stop()
+    g:TreesitterOnline = 0
+enddef
 
+export def TSRestart()
+    TSStop()
     TSInit()
 enddef
 

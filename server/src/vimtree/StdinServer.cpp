@@ -77,8 +77,6 @@ void StdinServer::process() {
             r = file;
         }
 
-        std::ofstream o("acacia.log", std::ios_base::app);
-        o << l << std::endl;
         std::cout << "[" 
             << 0 << ","
             << r.dump()
