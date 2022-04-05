@@ -60,86 +60,36 @@ export def TSManage(language: string, install: number = 1)
     var directoryExists = isdirectory(targetDirectory)
 
     if install
+        var logs: string
         if (directoryExists)
             echo "Updating parser..."
             # These are executed in a subprocess,
             # so we don't need to worry about pwd management
-            exec '!cd' targetDirectory "&& git pull"
+            logs = system('cd' .. " " .. targetDirectory .. " && git pull")
         else
-            exec '!git clone' g:TreesitterParsers[language].url targetDirectory
+            echo "Cloning directory..."
+            logs = system('git clone' .. " " .. g:TreesitterParsers[language].url .. " " .. targetDirectory)
         endif
+        if v:shell_error
+            echoerr logs
+            echoerr "Failed to clone directory"
+            return
+        endif
+        echo "Directory grabbed. Compiling..."
         
         # Now we compile
 
-        var compiler = g:TreesitterCompiler
-
-        var baseArgs: list<string> = [] #"src/parser.c src/scanner.cc"
-        var cArgs: list<string>    = []
-        var cppArgs: list<string>  = []
-        if has("win32")
-            echoerr "Not supported; open a PR or wait for me to maybe or maybe not do it"
-            return
-        else
-            baseArgs->add("-Isrc/")
-            baseArgs->add("-fPIC")
-
-            cppArgs = baseArgs->copy()
-
-            cArgs = baseArgs->copy()
-            cppArgs->add("-std=c++14")
-            cppArgs->add("-llibc++")
-
-            cArgs->add("-std=c99")
-        endif
-
-        var cAppend = cArgs->join(" ")
-        var cppAppend = cppArgs->join(" ")
-
-        var cFiles = globpath(targetDirectory .. "/src", '*.c')->split('\n')
-        var cppFiles = globpath(targetDirectory .. "/src", '*.cc')->split('\n')
-
-        # These appear to be standard
-        var compArg = ""
-
-        for cF in cFiles
-            var base = cF[0 : cF->stridx(".") - 1]
-            compArg ..= " && "
-                .. compiler
-                .. " " .. cF
-                .. " -o " .. base .. ".o -c "
-                .. cAppend
-        endfor
-
-        for cF in cppFiles
-            var base = cF[0 : cF->stridx(".") - 1]
-            compArg ..= " && "
-                .. compiler
-                .. " " .. cF
-                .. " -o " .. base .. ".o -c "
-                .. cppAppend
-        endfor
-
-        echo "Compiling objects..."
-        var logs = systemlist("cd " .. targetDirectory .. " " .. compArg)
-        if v:shell_error != 0
-            for log in logs
-                echoerr log
+        var lines = readfile(g:TreesitterDirectory .. "/scripts/CMakeLists.txt")
+        writefile(lines, targetDirectory .. "/CMakeLists.txt")
+        var res = system("cd " .. targetDirectory .. " && cmake . && cmake --build .")->split('\n')
+        if v:shell_error
+            for l in res
+                echoerr l
             endfor
-            echoerr "Failed to compile parser"
+            echoerr "Failed to compile."
             return
         endif
-
-        echo "Compiling parser.so..."
-        var objects = globpath(targetDirectory .. "/src", '*.o')->split('\n')
-        logs = systemlist("cd " .. targetDirectory .. " && " .. compiler .. " " .. objects->join(' ') .. " -shared -o parser.so")
-        if v:shell_error != 0
-            for log in logs
-                echoerr log
-            endfor
-            echoerr "Failed to compile parser"
-            return
-        endif
-        echo "Compilation successful."
+        echo "Succssfully installed parser for" language
     else
         if (!directoryExists)
             echo "Parser not installed"
