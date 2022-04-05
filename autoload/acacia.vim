@@ -80,7 +80,7 @@ export def TSManage(language: string, install: number = 1)
             echoerr "Not supported; open a PR or wait for me to maybe or maybe not do it"
             return
         else
-            #baseArgs->add("-Isrc/")
+            baseArgs->add("-Isrc/")
             baseArgs->add("-fPIC")
 
             cppArgs = baseArgs->copy()
@@ -120,18 +120,22 @@ export def TSManage(language: string, install: number = 1)
         endfor
 
         echo "Compiling objects..."
-        var logs = system("cd " .. targetDirectory .. " " .. compArg)
+        var logs = systemlist("cd " .. targetDirectory .. " " .. compArg)
         if v:shell_error != 0
-            echoerr logs
+            for log in logs
+                echoerr log
+            endfor
             echoerr "Failed to compile parser"
             return
         endif
 
         echo "Compiling parser.so..."
         var objects = globpath(targetDirectory .. "/src", '*.o')->split('\n')
-        logs = system("cd " .. targetDirectory .. " && " .. compiler .. " " .. objects->join(' ') .. " -shared -o parser.so")
+        logs = systemlist("cd " .. targetDirectory .. " && " .. compiler .. " " .. objects->join(' ') .. " -shared -o parser.so")
         if v:shell_error != 0
-            echoerr logs
+            for log in logs
+                echoerr log
+            endfor
             echoerr "Failed to compile parser"
             return
         endif
