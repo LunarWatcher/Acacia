@@ -80,7 +80,7 @@ export def TSManage(language: string, install: number = 1)
             echoerr "Not supported; open a PR or wait for me to maybe or maybe not do it"
             return
         else
-            baseArgs->add("-Isrc/")
+            #baseArgs->add("-Isrc/")
             baseArgs->add("-fPIC")
 
             cppArgs = baseArgs->copy()
@@ -98,17 +98,11 @@ export def TSManage(language: string, install: number = 1)
         var cFiles = globpath(targetDirectory .. "/src", '*.c')->split('\n')
         var cppFiles = globpath(targetDirectory .. "/src", '*.cc')->split('\n')
 
-        echo cFiles
-        echo cppFiles
-
         # These appear to be standard
-
         var compArg = ""
 
         for cF in cFiles
             var base = cF[0 : cF->stridx(".") - 1]
-            echo base
-
             compArg ..= " && "
                 .. compiler
                 .. " " .. cF
@@ -118,8 +112,6 @@ export def TSManage(language: string, install: number = 1)
 
         for cF in cppFiles
             var base = cF[0 : cF->stridx(".") - 1]
-            echo base
-
             compArg ..= " && "
                 .. compiler
                 .. " " .. cF
@@ -127,13 +119,23 @@ export def TSManage(language: string, install: number = 1)
                 .. cppAppend
         endfor
 
-        echo compArg
+        echo "Compiling objects..."
+        var logs = system("cd " .. targetDirectory .. " " .. compArg)
+        if v:shell_error != 0
+            echoerr logs
+            echoerr "Failed to compile parser"
+            return
+        endif
 
-
-        exec "!cd" targetDirectory compArg
-
+        echo "Compiling parser.so..."
         var objects = globpath(targetDirectory .. "/src", '*.o')->split('\n')
-        exec "!cd" targetDirectory "&&" compiler objects->join(' ') "-shared -o parser.so"
+        logs = system("cd " .. targetDirectory .. " && " .. compiler .. " " .. objects->join(' ') .. " -shared -o parser.so")
+        if v:shell_error != 0
+            echoerr logs
+            echoerr "Failed to compile parser"
+            return
+        endif
+        echo "Compilation successful."
     else
         if (!directoryExists)
             echo "Parser not installed"
