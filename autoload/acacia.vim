@@ -26,7 +26,7 @@ var job: job
 var channel: channel
 
 export def TSIOInput(ch: channel, msg: any)
-    echom msg
+    #echom msg
     if (msg == "pong")
         g:TreesitterOnline = 1
     endif
