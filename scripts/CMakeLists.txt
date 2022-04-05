@@ -8,7 +8,7 @@ project(parser)
 set (CMAKE_C_STANDARD 99)
 set (CMAKE_CXX_STANDARD 14)
 
-file(GLOB SRC_FILES src/*.cc *.c)
+file(GLOB SRC_FILES src/*.cc src/*.c)
 add_library(parser SHARED ${SRC_FILES})
 
 target_include_directories(parser PUBLIC ./src)

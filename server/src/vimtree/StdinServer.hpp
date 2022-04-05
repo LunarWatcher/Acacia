@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vimtree/TSInterface.hpp"
 #include <atomic>
 #include <condition_variable>
 #include <memory>
@@ -18,6 +19,7 @@ namespace vimtree {
 
 class StdinServer {
 private:
+    TSInterface interface;
     std::thread runner;
 
     std::mutex lock;
@@ -28,7 +30,7 @@ private:
     std::atomic<bool> running{true};
     std::vector<std::shared_ptr<TSParser>> parsers;
 public:
-    StdinServer();
+    StdinServer(const std::string& tsRoot);
     ~StdinServer();
 
     void poll();

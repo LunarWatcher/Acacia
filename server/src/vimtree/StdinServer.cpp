@@ -9,8 +9,8 @@
 
 namespace vimtree {
 
-StdinServer::StdinServer() : runner(std::bind(&StdinServer::process, this)) {
-    
+StdinServer::StdinServer(const std::string& tsRoot) : runner(std::bind(&StdinServer::process, this)), interface(tsRoot) {
+    interface.loadLanguage("cpp");
 }
 
 StdinServer::~StdinServer() {

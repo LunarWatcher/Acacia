@@ -26,6 +26,7 @@ var job: job
 var channel: channel
 
 export def TSIOInput(ch: channel, msg: any)
+    echom msg
     #echom msg
     if (msg == "pong")
         g:TreesitterOnline = 1
@@ -33,7 +34,7 @@ export def TSIOInput(ch: channel, msg: any)
 enddef
 
 export def TSInit()
-    job = job_start(g:TreesitterDirectory .. "/server/build/bin/treesitter",
+    job = job_start(g:TreesitterDirectory .. "/server/build/bin/treesitter " .. g:TreesitterDirectory .. "/parsers/",
         {
             "callback": TSIOInput,
             "mode": "json",
