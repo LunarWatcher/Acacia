@@ -1,5 +1,7 @@
 #include "TSInterface.hpp"
 
+#include "VimInterface.hpp"
+
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -11,7 +13,7 @@
 namespace vimtree {
 
 TSInterface::TSInterface(const std::filesystem::path& tsRoot) : tsRoot(tsRoot) {
-    
+    parser = ts_parser_new();
 }
 
 TSInterface::~TSInterface() {
@@ -22,6 +24,27 @@ TSInterface::~TSInterface() {
         dlclose(loaderData.second);
 #endif
     }
+
+    ts_parser_delete(parser);
+}
+
+void TSInterface::parse(const std::string &language, const std::string &buffer) {
+    auto tsLang = loadLanguage(language);
+    error("Parsing buffer");
+    if (!tsLang) {
+        error(language + " not loaded.");
+        return;
+    }
+    // Can I even reuse parsers like this?
+    // We may also want to cache trees, but I have no idea how that'd work,
+    // or how the performance might be affected.
+    // Also seems like trees could be reused for different query types?
+    ts_parser_set_language(parser, tsLang);
+
+    TSTree* tree = ts_parser_parse_string(parser, nullptr, buffer.c_str(), buffer.size());
+    TSNode root = ts_tree_root_node(tree);
+
+    error("All good");
 }
 
 TSLanguage* TSInterface::loadLanguage(const std::string& language) {
@@ -38,11 +61,11 @@ TSLanguage* TSInterface::loadLanguage(const std::string& language) {
 #endif
 
     if (dhl == nullptr) {
-        std::cout << "[0, \"[DYLoad] Critical error: failed to load " + path.string()
+        error("[DYLoad] Critical error: failed to load " + path.string()
 #ifndef _WIN32
                           + ": " + std::string(dlerror())
 #endif
-            + "\"]";
+        );
         return nullptr;
     }
 
@@ -52,7 +75,7 @@ TSLanguage* TSInterface::loadLanguage(const std::string& language) {
     // Fuck you Windows
     LanguageParser parser = (novamain_t) GetProcAddress((HMODULE) dhl, symbolCache.c_str());
     if (parser == nullptr) {
-        std::cout << "[0, \"failed to load " + symbolCache + "\"]\n";
+        error("failed to load " + symbolCache);
         return nullptr;
     }
 #else
@@ -61,17 +84,16 @@ TSLanguage* TSInterface::loadLanguage(const std::string& language) {
     LanguageParser parser = (LanguageParser) dlsym(dhl, symbolCache.c_str());
     const auto err = dlerror();
     if (err) {
-        std::cout << "[0, \"" + std::string(err) + "\"]\n";
+        error(std::string(err));
         return nullptr;
     }
 #endif
     auto pInstance = parser();
     if (!pInstance) {
-        std::cout << "[0, \"failed to load " + language + "\"]\n";
+        error("Failed to load " + language);
         return nullptr;
     }
     loaders[language] = {pInstance, dhl};
-    std::cout << "[0, \"successfully loaded " + language + "\"]\n";
     return pInstance;
 }
 

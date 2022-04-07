@@ -1,4 +1,5 @@
 #include "StdinServer.hpp"
+#include "vimtree/VimInterface.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -6,6 +7,8 @@
 #include <fstream>
 #include <functional>
 #include <thread>
+
+using namespace std::chrono_literals;
 
 namespace vimtree {
 
@@ -23,11 +26,11 @@ StdinServer::~StdinServer() {
 }
 
 void StdinServer::poll() {
+    std::this_thread::sleep_for(1s);
 
     while (running) {
         std::string line;
         std::getline(std::cin, line);
-
         dispatch(line);
     }
 }
@@ -43,10 +46,12 @@ void StdinServer::dispatch(const std::string &line) {
 std::string StdinServer::pop() {
     std::unique_lock<std::mutex> guard(lock);
     if (!tasks.size()) {
-        trigger.wait(guard);
+        std::flush(std::cout);
+        trigger.wait(guard, [this]{ return tasks.size() > 0; });
     }
 
     if (!running) {
+        error("Thread aborting");
         return "";
     }
 
@@ -64,23 +69,20 @@ void StdinServer::process() {
         }
 
         nlohmann::json j = nlohmann::json::parse(l);
-        
         auto id = j.at(0).get<long long>();
         auto value = j.at(1);
 
         nlohmann::json r;
-        if (value.is_string() && value == "ping") {
-            r = "pong";
+        if (value.is_string() && value.get<std::string>() == "ping") {
+            std::cout << "["  << 0 << ",\"pong\"]" << std::endl;
         } else {
             // we assume good requests; we now have an object.
             auto file = value.at("buff");
-            r = file;
+
+            interface.parse(value.at("filetype"), file);
+
         }
 
-        std::cout << "[" 
-            << 0 << ","
-            << r.dump()
-            << "]" << std::endl;
     }
 }
 

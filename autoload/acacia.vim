@@ -26,10 +26,16 @@ var job: job
 var channel: channel
 
 export def TSIOInput(ch: channel, msg: any)
-    echom msg
-    #echom msg
-    if (msg == "pong")
+    if (type(msg) == v:t_string && msg == "pong")
         g:TreesitterOnline = 1
+    elseif (type(msg) == v:t_dict)
+        if msg->has_key("error")
+            # Temporary error management
+            echom msg
+        endif
+    else
+        # Temporary generic catch-all
+        echom msg
     endif
 enddef
 
@@ -38,6 +44,7 @@ export def TSInit()
         {
             "callback": TSIOInput,
             "mode": "json",
+            "err_mode": "raw",
             "noblock": 1,
             "timeout": 0
         }
@@ -122,10 +129,14 @@ export def TSRefresh()
         return
     endif
 
-    channel->ch_evalexpr({"buff": join(getline(1, "$"), "\n")})
+    channel->ch_evalexpr({"buff": join(getline(1, "$"), "\n"), "filetype": &ft})
 enddef
 
 export def InitializeBuffer()
+    # TODO: deal with installed parsers too
+    if !g:TreesitterParsers->has_key(&ft)
+        return
+    endif
     if has_key(g:TreesitterParsers, &ft)
         autocmd CursorHoldI <buffer> call acacia#TSRefresh()
     endif
@@ -139,6 +150,10 @@ enddef
 export def TSRestart()
     TSStop()
     TSInit()
+enddef
+
+export def TSStatus()
+    echo job_info(job)
 enddef
 
 # }}}
