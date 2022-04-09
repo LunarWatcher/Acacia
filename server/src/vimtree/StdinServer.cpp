@@ -26,8 +26,6 @@ StdinServer::~StdinServer() {
 }
 
 void StdinServer::poll() {
-    std::this_thread::sleep_for(1s);
-
     while (running) {
         std::string line;
         std::getline(std::cin, line);
@@ -74,7 +72,7 @@ void StdinServer::process() {
 
         nlohmann::json r;
         if (value.is_string() && value.get<std::string>() == "ping") {
-            std::cout << "["  << 0 << ",\"pong\"]" << std::endl;
+            std::cout << "["  << id << ",\"pong\"]" << std::endl;
         } else {
             // we assume good requests; we now have an object.
             auto file = value.at("buff");

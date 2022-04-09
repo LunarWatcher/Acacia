@@ -10,16 +10,10 @@ vim9script
 # I'm going out on a limb and assuming highlights don't span multiple lines.
 # if they do, parts here need to be redesigned to use end_lnum and end_col
 def HighlightRange(bufID, line, startCol, length, hlGroup)
-    
     prop_add(line, startCol, {
         'bufnr': bufID,
         'length': length
     })
 enddef
-
-# }}}
-# Treesitter runner {{{
-
-# TODO
 
 # }}}

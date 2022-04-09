@@ -45,17 +45,18 @@ export def TSInit()
             "callback": TSIOInput,
             "mode": "json",
             "err_mode": "raw",
+
             "noblock": 1,
-            "timeout": 0
+            "timeout": 20
         }
     )
     if job->job_status() == "fail"
         echoerr "Failed to start server."
+        return
     endif
 
     channel = job->job_getchannel()
-    channel->ch_evalexpr("ping")
-
+    channel->ch_sendexpr("ping", {'callback': TSIOInput})
 enddef
 
 export def TSManage(language: string, install: number = 1)
