@@ -1,3 +1,7 @@
+This project has stalled as interests have shifted. Additionally, Bram is [looking at the TextMate grammar system](https://github.com/vim/vim/issues/9087), and his argument against Tree-sitter (notably not requiring the user to be able to compile C) makes a ton of sense. The modular compilation process has remained a bottleneck for me while trying to get this plugin working. Anyway, it doesn't really matter, because this project was started with the idea that nothing similar to TextMate/Tree-sitter/etc would become relevant soon enough for this plugin to not do stuff:tm:. That no longer holds.
+
+Any extended syntax highlighting features solve what I wanted to accomplish here. While nothing has been implemented yet, it's being looked at, with the intent of having first-class support; I cannot compete with that in a plugin. Consequently, this project is now abandoned in favor of future (but near future) improvements to Vim itself.
+
 # Acacia
 
 Treesitter for Vim.
